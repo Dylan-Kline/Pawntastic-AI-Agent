@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.ArrayList;
+
 public class Board {
     
     // Unicode values for pawn icons
@@ -38,14 +41,36 @@ public class Board {
         }
     }
 
+    public Board clone(){
+
+        Board cloned_Board = new Board(this.size);
+
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                cloned_Board.board[i][j] = board[i][j];
+            }
+        }
+
+        return cloned_Board;
+    }
+
     // Prints out the board to console
     public void display_board(){
+
+        for (int i = 0; i < size; i++){
+            System.out.print(i + 1 + " ");
+        }
+        System.out.println();
+
         for (int i = 0; i < size; i++){
             for (int j = 0; j < size; j++){
                 System.out.print(board[i][j] + " ");
             }
+            System.out.print(i + 1 + " ");
             System.out.println();
         }
+
+        System.out.print("\n");
     }
 
     // Checks if the specified location is empty
@@ -63,12 +88,73 @@ public class Board {
         return board[x][y];
     }
 
+    // Apply the given move to the board (modifying the position of pawns)
+    public void apply_move(Move move){
+        
+    }
+
     // Get the possible moves from the specific location
-    public List<Move> get_applicable_moves(Player current_player){
+    public List<Move> get_applicable_moves_for_player(Player current_player){
+        List<Move> possible_moves = new ArrayList<>();
+
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++)
+            {
+                if (board[i][j] == current_player.get_pawn_symbol()){
+
+                    // White's possible moves
+                    if (current_player == Player.WHITE){
+                        
+                        // Forward move
+                        if ( i > 0 && board[i-1][j] == '-'){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i - 1, j)));
+                        }
+
+                        // Double forward move if the pawn is in the start position
+                        if (i == size - 2 && board[i-1][j] == '-' && board[i-2][j] == '-'){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i - 2, j)));
+                        }
+
+                        // Diagonal left capture
+                        if (i > 0 && j > 0 && board[i - 1][j - 1] == Player.BLACK.get_pawn_symbol()){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i - 1, j - 1)));
+                        }
+
+                        // Diagonal right capture
+                        if (i > 0 && j < size - 1 && board[i - 1][j + 1] == Player.BLACK.get_pawn_symbol()){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i - 1, j + 1)));
+                        }
+                    }
+                    else if (current_player == Player.BLACK){
+                        
+                        // Forward move
+                        if ( i < size - 1 && board[i + 1][j] == '-'){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i + 1, j)));
+                        }
+
+                        // Double forward move if the pawn is in the start position
+                        if (i == 1 && board[i + 1][j] == '-' && board[i + 1][j] == '-'){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i + 2, j)));
+                        }
+
+                        // Diagonal right capture
+                        if (i < size - 1 && j > 0 && board[i + 1][j - 1] == Player.WHITE.get_pawn_symbol()){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i + 1, j - 1)));
+                        }
+
+                        // Diagonal left capture
+                        if (i < size - 1 && j < size - 1 && board[i + 1][j + 1] == Player.WHITE.get_pawn_symbol()){
+                            possible_moves.add(new Move(new Location(i, j), new Location(i + 1, j + 1)));
+                        }
+                    
+                    }
+                }
+            }
+        }
+        return possible_moves;
         // get location of the pawn of the current_player
         // check for valid moves (such as whether or not the player is currently against the boundary)
         // or also check whether the move is straight towards a location holding a enemy pawn (illegal move)
-        
     }
 
     public static void main(String[] args){

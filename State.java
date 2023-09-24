@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.undo.StateEdit;
 public class State {
     
     private Board board; // Current board state
@@ -33,9 +36,23 @@ public class State {
         return false;
     }
 
-    // Get all applicable moves for the current player in this state
+    // Get all applicable moves for the current player in this state (if no moves are received it is a stalemate (tie))
     public List<Move> get_applicable_moves() {
-        
+        return board.get_applicable_moves_for_player(current_player); 
+    }
+
+    // Applies the given move and returns the new state that results from it
+    public State apply_move(Move move){
+        Board new_board = board.clone();
+        new_board.
+    }
+
+    public static void main(String[] args){
+        Board new_board = new Board(8);
+        State state = new State(new_board, Player.WHITE);
+
+        List<Move> moves = state.get_applicable_moves();
+
     }
 }
 
