@@ -85,7 +85,21 @@ public class Board {
 
     // Get the pawn at a specific location
     public char get_pawn(int x, int y) {
-        return board[x][y];
+
+        if (board[x][y] == WHITE_PAWN || board[x][y] == BLACK_PAWN){
+            return board[x][y];
+        }
+        return '-';
+    }
+
+    // Checks whether there is a pawn at the given location
+    public boolean is_pawn_location(int row, int col) {
+        return board[row][col] == WHITE_PAWN || board[row][col] == BLACK_PAWN ? true : false;
+    }
+
+    // Get the size of the board
+    public int get_board_size() {
+        return this.size;
     }
 
     // Apply the given move to the board (modifying the position of pawns)
@@ -152,9 +166,6 @@ public class Board {
             }
         }
         return possible_moves;
-        // get location of the pawn of the current_player
-        // check for valid moves (such as whether or not the player is currently against the boundary)
-        // or also check whether the move is straight towards a location holding a enemy pawn (illegal move)
     }
 
     public static void main(String[] args){

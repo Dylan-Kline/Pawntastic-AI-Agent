@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.undo.StateEdit;
 public class State {
     
     private Board board; // Current board state
@@ -30,9 +29,22 @@ public class State {
         this.current_player = player;
     }
 
-    // placeholder
     // Determines whether the state is a terminal state (end of the game)
     public boolean is_terminal(){
+
+        // Check if any player has no more legal moves left (tie)
+        if (this.get_applicable_moves().isEmpty()) {
+            return true;
+        }
+
+        // Check if any pawn has reached the opposite side of the board
+        for (int col = 0; col < board.get_board_size(); col++){
+
+            if (this.board.is_pawn_location(0, col) || this.board.is_pawn_location(board.get_board_size() - 2, col)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -44,7 +56,12 @@ public class State {
     // Applies the given move and returns the new state that results from it
     public State apply_move(Move move){
         Board new_board = board.clone();
-        new_board.
+        new_board.apply_move(move);
+
+        // Toggle player for the next turn
+        Player next_player = (current_player == Player.WHITE) ? Player.BLACK : Player.WHITE;
+
+        return new State(new_board, next_player);
     }
 
     public static void main(String[] args){
