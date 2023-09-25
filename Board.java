@@ -58,7 +58,7 @@ public class Board {
     public void display_board(){
 
         for (int i = 0; i < size; i++){
-            System.out.print(i + 1 + " ");
+            System.out.print(i + " ");
         }
         System.out.println();
 
@@ -66,7 +66,7 @@ public class Board {
             for (int j = 0; j < size; j++){
                 System.out.print(board[i][j] + " ");
             }
-            System.out.print(i + 1 + " ");
+            System.out.print(i + " ");
             System.out.println();
         }
 
@@ -149,9 +149,10 @@ public class Board {
                         }
 
                         // Double forward move if the pawn is in the start position
-                        if (i == 1 && board[i + 1][j] == '-' && board[i + 1][j] == '-'){
+                        if (i == 1 && board[i + 1][j] == '-' && board[i + 2][j] == '-'){
                             possible_moves.add(new Move(new Location(i, j), new Location(i + 2, j)));
                         }
+
 
                         // Diagonal right capture
                         if (i < size - 1 && j > 0 && board[i + 1][j - 1] == Player.WHITE.get_pawn_symbol()){

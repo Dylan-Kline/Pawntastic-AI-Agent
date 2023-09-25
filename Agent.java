@@ -19,6 +19,7 @@ public class Agent {
         Move best_move = null;
 
         for (Move move : current_state.get_board().get_applicable_moves_for_player(player)) {
+            System.out.print(move + "\n");
             State next_state = current_state.apply_move(move);
             int move_value;
 

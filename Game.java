@@ -12,8 +12,8 @@ public class Game {
         this.board = new Board (board_size);
         this.current_player = Player.WHITE;
         this.current_state = new State(board, current_player);
-        this.human_player = Player.WHITE;
-        this.agent = new Agent(Player.BLACK, max_depth_for_agents);
+        this.human_player = Player.BLACK;
+        this.agent = new Agent(Player.WHITE, max_depth_for_agents);
     }
 
     public void play(){
@@ -49,6 +49,7 @@ public class Game {
     public void handle_agent_turn() {
         Move best_move = agent.get_best_move(current_state);
         current_state = current_state.apply_move(best_move);
+        current_player = current_state.get_current_player();
         board = current_state.get_board();
         System.out.println("Agent moved: " + best_move);
     }
@@ -68,13 +69,17 @@ public class Game {
         } while (move == null);
 
         current_state = current_state.apply_move(move);
+        current_player = current_state.get_current_player();
         board = current_state.get_board();
-        
         System.out.println("Human Player moved: " + move);
     }
 
     private boolean is_valid_move(Move move) {
         List<Move> possible_moves = board.get_applicable_moves_for_player(current_player);
+
+        for (Move moves : possible_moves){
+            System.out.println(moves);
+        }
         return possible_moves.contains(move);
     }
 
