@@ -42,11 +42,16 @@ public class Move {
         return start.equals(move.start) && end.equals(move.end);
     }
 
-    // Main Test
-    public static void main(String[] args){
-        Move move1 = new Move(new Location(0, 0), new Location(1, 0));
-        Move move2 = new Move(new Location(0, 0), new Location(0, 0));
-
-        System.out.print(move1.equals(move2));
+    @Override
+    public int hashCode() {
+        int result = start != null ? start.hashCode() : 0;
+        result = 31 * result + (end != null ? end.hashCode() : 0);
+        return result;
     }
+
+    @Override
+    public String toString() {
+        return start + " -> " + end;
+    }
+
 }

@@ -42,23 +42,16 @@ public class Location {
         return x == location.x && y == location.y;
     }
 
-    // // Checks whether the location is a valid location on the board
-    // public boolean is_valid_location(int x, int y){
-
-        
-    // }
-
-    public static void main(String[] args){
-
-        Location location1 = new Location(0, 0);
-        Location location2 = new Location(0, 0);
-
-        System.out.print(location1.equals(location2));
-
-        location1.set_x(5);
-
-        System.out.print(location1.equals(location2));
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 
 }

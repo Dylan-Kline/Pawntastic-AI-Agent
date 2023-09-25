@@ -8,25 +8,49 @@ public class Game {
     private Player human_player;
     private Agent agent;
 
-    public Game (int board_size, Player human_player_color, int max_depth_for_agents){
+    public Game (int board_size, int max_depth_for_agents){
         this.board = new Board (board_size);
         this.current_player = Player.WHITE;
         this.current_state = new State(board, current_player);
-        this.human_player = human_player_color;
-        this.agent = new Agent(human_player_color == Player.WHITE ? Player.BLACK : Player.WHITE, max_depth_for_agents);
+        this.human_player = Player.WHITE;
+        this.agent = new Agent(Player.BLACK, max_depth_for_agents);
     }
 
     public void play(){
         while (!is_game_over()){
 
             board.display_board();
-            if (current_player == human_player){
+            if (current_state.get_current_player() == human_player){
                 handle_human_turn();
             }
             else{
                 handle_agent_turn();
             }
         }
+
+        declare_winner();
+    }
+
+    public void declare_winner() {
+        board.display_board();
+
+        if (board.get_applicable_moves_for_player(Player.WHITE).isEmpty() ||
+            board.get_applicable_moves_for_player(Player.BLACK).isEmpty()) {
+                System.out.println("The game ends in a stalemate.");
+        }
+        else if (current_state.get_current_player() == Player.WHITE){
+            System.out.println("Black wins!");
+        }
+        else {
+            System.out.println("White wins!");
+        }
+    }
+
+    public void handle_agent_turn() {
+        Move best_move = agent.get_best_move(current_state);
+        current_state = current_state.apply_move(best_move);
+        board = current_state.get_board();
+        System.out.println("Agent moved: " + best_move);
     }
 
     public void handle_human_turn() {
@@ -44,6 +68,8 @@ public class Game {
         } while (move == null);
 
         current_state = current_state.apply_move(move);
+        board = current_state.get_board();
+        
         System.out.println("Human Player moved: " + move);
     }
 
@@ -92,7 +118,13 @@ public class Game {
         }
 
         // Check if any pawn has reached the opposite side of the board
-        for (int )
+        for (int col = 0; col < board.get_board_size(); col++){
+            if (board.is_pawn_location(0, col) || 
+                board.is_pawn_location(board.get_board_size() - 1, col)) {
+                    return true;
+                }
+        }
+        return false;
     }
 
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 public class Board {
     
     // Unicode values for pawn icons
-    private static final char WHITE_PAWN = '\u2659';
-    private static final char BLACK_PAWN = '\u265F';
+    public static final char WHITE_PAWN = 'X';
+    public static final char BLACK_PAWN = 'O';
 
     // Board variables
     private int size;
@@ -75,7 +75,7 @@ public class Board {
 
     // Checks if the specified location is empty
     public boolean is_empty(int x, int y){
-        return board[x][y] == ' ';
+        return board[x][y] == '-';
     }
 
     // Sets a pawn at a specific location
@@ -104,7 +104,9 @@ public class Board {
 
     // Apply the given move to the board (modifying the position of pawns)
     public void apply_move(Move move){
-        
+        char pawn = board[move.get_start().get_x()][move.get_start().get_y()];
+        board[move.get_start().get_x()][move.get_start().get_y()] = '-';
+        board[move.get_end().get_x()][move.get_end().get_y()] = pawn;
     }
 
     // Get the possible moves from the specific location
@@ -166,13 +168,5 @@ public class Board {
             }
         }
         return possible_moves;
-    }
-
-    public static void main(String[] args){
-        Board board4x4 = new Board(4);
-        board4x4.display_board();
-
-        Board board8x8 = new Board(8);
-        board8x8.display_board();
     }
 }

@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class State {
@@ -40,7 +39,7 @@ public class State {
         // Check if any pawn has reached the opposite side of the board
         for (int col = 0; col < board.get_board_size(); col++){
 
-            if (this.board.is_pawn_location(0, col) || this.board.is_pawn_location(board.get_board_size() - 2, col)) {
+            if (this.board.is_pawn_location(0, col) || this.board.is_pawn_location(board.get_board_size() - 1, col)) {
                 return true;
             }
         }
@@ -55,21 +54,14 @@ public class State {
 
     // Applies the given move and returns the new state that results from it
     public State apply_move(Move move){
-        Board new_board = board.clone();
+        Board new_board = this.board.clone();
         new_board.apply_move(move);
 
         // Toggle player for the next turn
-        Player next_player = (current_player == Player.WHITE) ? Player.BLACK : Player.WHITE;
+        Player next_player = (this.current_player == Player.WHITE) ? Player.BLACK : Player.WHITE;
 
         return new State(new_board, next_player);
     }
 
-    public static void main(String[] args){
-        Board new_board = new Board(8);
-        State state = new State(new_board, Player.WHITE);
-
-        List<Move> moves = state.get_applicable_moves();
-
-    }
 }
 
