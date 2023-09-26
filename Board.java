@@ -58,8 +58,9 @@ public class Board {
     public void display_board(){
 
         for (int i = 0; i < size; i++){
-            System.out.print(i + " ");
+            System.out.print((char)('a' + i) + " ");
         }
+
         System.out.println();
 
         for (int i = 0; i < size; i++){
@@ -142,28 +143,26 @@ public class Board {
                         }
                     }
                     else if (current_player == Player.BLACK){
-                        
+    
                         // Forward move
-                        if ( i < size - 1 && board[i + 1][j] == '-'){
+                        if (i < size - 1 && board[i + 1][j] == '-') {
                             possible_moves.add(new Move(new Location(i, j), new Location(i + 1, j)));
                         }
-
+                    
                         // Double forward move if the pawn is in the start position
-                        if (i == 1 && board[i + 1][j] == '-' && board[i + 2][j] == '-'){
+                        if (i == 1 && board[i + 1][j] == '-' && board[i + 2][j] == '-') {
                             possible_moves.add(new Move(new Location(i, j), new Location(i + 2, j)));
                         }
-
-
-                        // Diagonal right capture
-                        if (i < size - 1 && j > 0 && board[i + 1][j - 1] == Player.WHITE.get_pawn_symbol()){
+                    
+                        // Diagonal left capture
+                        if (i < size - 1 && j > 0 && board[i + 1][j - 1] == Board.WHITE_PAWN) {
                             possible_moves.add(new Move(new Location(i, j), new Location(i + 1, j - 1)));
                         }
-
-                        // Diagonal left capture
-                        if (i < size - 1 && j < size - 1 && board[i + 1][j + 1] == Player.WHITE.get_pawn_symbol()){
+                    
+                        // Diagonal right capture
+                        if (i < size - 1 && j < size - 1 && board[i + 1][j + 1] == Board.WHITE_PAWN) {
                             possible_moves.add(new Move(new Location(i, j), new Location(i + 1, j + 1)));
                         }
-                    
                     }
                 }
             }

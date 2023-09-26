@@ -1,90 +1,75 @@
 import java.util.List;
-import java.util.Random;
 
 public class Agent {
     
     private Player player; // Represents which side the agent plays as White or Black
-    private int max_depth; // the depth to which the minimax algorithm will search
+    private int states_searched; // Number of states searched
     
-    public Agent(Player player, int max_depth){
+    public Agent(Player player){
         this.player = player;
-        this.max_depth = max_depth;
+        this.states_searched = 0;
     }
 
     /**
-     * Gets the best move for the agent's player from the current board state.
+     * Gets the best move for the AI agent from the current board state.
      */
-    public Move get_best_move(State current_state){
-        int best_value = (current_state.get_current_player() == Player.WHITE) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-        Move best_move = null;
-
-        for (Move move : current_state.get_board().get_applicable_moves_for_player(player)) {
-            System.out.print(move + "\n");
-            State next_state = current_state.apply_move(move);
-            int move_value;
-
-            if (player == Player.WHITE){
-                move_value = minimax(next_state, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
-                
-                if (move_value > best_value) {
-                    best_value = move_value;
-                    best_move = move;
-                }
-            }
-            else {
-                move_value = minimax(next_state, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-                
-                if (move_value < best_value) {
-                    best_value = move_value;
-                    best_move = move;
-                }
-            }
-        }
-
+    public Move get_best_move(State state){
+        states_searched = 0;
+        int[] result = minimax(state, player);
+        Location initialLocation = new Location(result[1], result[2]);
+        Location targetLocation = new Location(result[3], result[4]);
+        Move best_move = new Move(initialLocation, targetLocation);
+        System.out.println("  Total states searched: " + states_searched);
         return best_move;
     }
-
+    
     /**
-     * Implementation of the minimax algorithm
+     * Implementation of minimax
+     * @param state
+     * @param player
+     * @return int[] array containing bestScore, initial position x and y, end position x and y
      */
-    private int minimax(State state, int alpha, int beta, boolean is_maximizing){
-        
-        if (state.is_terminal()) {
-            return utility(state);
-        }
+    private int[] minimax(State state, Player player) {
+        states_searched++;
 
-        if (is_maximizing) {
+        List<Move> nextMoves = state.get_board().get_applicable_moves_for_player(player);
+        int bestScore = (player == this.player) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        int currentScore;
+        int bestInitialRow = -1;
+        int bestInitialCol = -1;
+        int bestTargetRow = -1;
+        int bestTargetCol = -1;
+    
+        if (state.is_terminal()) {  // Checking if the state is terminal
+            bestScore = utility(state);
 
-            int max_eval = Integer.MIN_VALUE;
-            for(Move move : state.get_board().get_applicable_moves_for_player(Player.WHITE)){
-
-                int eval = minimax(state.apply_move(move), alpha, beta, false);
-                max_eval = Math.max(max_eval, eval);
-                alpha = Math.max(alpha, eval);
-
-                if (beta <= alpha) {
-                    break;
+        } else {
+            for (Move move : nextMoves) {
+                State nextState = state.apply_move(move);
+                if (player == this.player) { // AI player (maximizing)
+                    currentScore = minimax(nextState, (this.player == Player.WHITE) ? Player.BLACK : Player.WHITE)[0];
+                    if (currentScore > bestScore) {
+                        bestScore = currentScore;
+                        bestInitialRow = move.get_start().get_x();
+                        bestInitialCol = move.get_start().get_y();
+                        bestTargetRow = move.get_end().get_x();
+                        bestTargetCol = move.get_end().get_y();
+                    }
+                } else { // Opponent (minimizing)
+                    currentScore = minimax(nextState, this.player)[0];
+                    if (currentScore < bestScore) {
+                        bestScore = currentScore;
+                        bestInitialRow = move.get_start().get_x();
+                        bestInitialCol = move.get_start().get_y();
+                        bestTargetRow = move.get_end().get_x();
+                        bestTargetCol = move.get_end().get_y();
+                    }
                 }
             }
-            return max_eval;
         }
-        else {
-            
-            int min_eval = Integer.MAX_VALUE;
-            for (Move move : state.get_board().get_applicable_moves_for_player(Player.BLACK)) {
-
-                int eval = minimax(state.apply_move(move), alpha, beta, true);
-                min_eval = Math.min(min_eval, eval);
-                beta = Math.min(beta, eval);
-
-                if (beta <= alpha) {
-                    break;
-                }
-            }
-            return min_eval;
-        }
+        return new int[] {bestScore, bestInitialRow, bestInitialCol, bestTargetRow, bestTargetCol};
     }
-
+       
     /** PlaceHolder
      * 
      * Implementation of the H-minimax algorithm with alpha/beta pruning
@@ -99,30 +84,32 @@ public class Agent {
     private int utility(State state) {
         Board board = state.get_board();
         int board_size = board.get_board_size();
-
+        
         for (int row = 0; row < board_size; row++) {
             for (int col = 0; col < board_size; col++) {
-
                 char pawn = board.get_pawn(row, col);
                 if (pawn == '-') {
                     continue;
                 }
-
+        
                 if (pawn == Board.WHITE_PAWN && row == 0) {
-                    return (state.get_current_player() == Player.WHITE) ? 1 : -1;
+                    return (this.player == Player.WHITE) ? 1 : -1;
                 }
                 else if (pawn == Board.BLACK_PAWN && row == board_size - 1) {
-                    return (state.get_current_player() == Player.BLACK ? 1 : -1);
+                    return (this.player == Player.BLACK) ? 1 : -1;
                 }
             }
         }
-
-        // Check if any player has applicable moves left
-        if (board.get_applicable_moves_for_player(Player.WHITE).isEmpty() ||
-            board.get_applicable_moves_for_player(Player.BLACK).isEmpty()){
-            return 0;
+        
+        // Check if the max player has applicable moves left
+        Player opponent = (this.player == Player.WHITE) ? Player.BLACK : player.WHITE;
+        if (board.get_applicable_moves_for_player(this.player).isEmpty() && board.get_applicable_moves_for_player(opponent).isEmpty()) {
+            return 0;  // tie
         }
-
-        return 0;
+        
+        throw new IllegalStateException("Utility should not be called for non-terminal states.");
     }
+    
+
+    
 }
