@@ -68,29 +68,5 @@ public class State {
 
         return new State(new_board, next_player);
     }
-
-    public static void main(String[] args) {
-        // Create an initial state with an empty board
-        Board initialBoard = new Board(4);
-        State initialState = new State(initialBoard, Player.WHITE);
-    
-        // Display the initial board
-        System.out.println("Initial Board:");
-        initialBoard.display_board();
-    
-        // Create a sample move (adjust this to your actual move)
-        Move sampleMove = new Move(new Location(2, 0), new Location(1, 1));
-    
-        // Apply the move to the initial state
-        State newState = initialState.apply_move(sampleMove);
-    
-        // Display the new state's board
-        System.out.println("\nBoard after applying the move:");
-        newState.get_board().display_board();
-        
-        // The board should now show the changes made by the move
-    }
-    
-
 }
 

@@ -11,9 +11,9 @@ public enum Player {
 
         switch(this){
             case WHITE:
-                return Board.WHITE_PAWN; // Unicode for white pawn
+                return Board.WHITE_PAWN; // char for white pawn
             case BLACK:
-                return Board.BLACK_PAWN; // Unicode for black pawn
+                return Board.BLACK_PAWN; // char for black pawn
             default:
                 throw new IllegalArgumentException("Invalid player type.");
         }

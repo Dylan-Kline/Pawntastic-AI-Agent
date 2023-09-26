@@ -2,14 +2,15 @@ import java.util.List;
 
 public class Game {
 
-    private Board board;
-    private State current_state;
+    private Board board; 
+    private State current_state; 
     private Player current_player;
     private Player human_player;
-    private Agent agent;
-    private int agent_type;
-    private int depth;
+    private Agent agent; // AI agent
+    private int agent_type; // minimax(1), h_minimax with a/b and depth cutoff(2)
+    private int depth; // max depth of searching for agent
 
+    // Initialize Game
     public Game (int board_size, Player human_player_color, Player agent_color, int agent_type, int depth){
         this.board = new Board (board_size);
         this.current_player = Player.WHITE;
@@ -20,6 +21,7 @@ public class Game {
         this.agent_type = agent_type;
     }
 
+    // Main game loop
     public void play(){
         while (!is_game_over()){
 
@@ -35,6 +37,7 @@ public class Game {
         declare_winner();
     }
 
+    // Print out whether one side won or there is a tie
     public void declare_winner() {
         board.display_board();
 
@@ -50,9 +53,11 @@ public class Game {
         }
     }
 
+    // Handle the AI agent's best move algorithms
     public void handle_agent_turn() {
-
         System.out.println("I'm thinking....");
+
+        // Find best move given current state, and update the current Game variables
         Move best_move = agent.get_best_move(this.current_state, agent_type);
         current_state = current_state.apply_move(best_move);
         current_player = current_state.get_current_player();
@@ -60,6 +65,7 @@ public class Game {
         System.out.println("Agent moved: " + best_move);
     }
 
+    // Handle the user's turn
     public void handle_human_turn() {
         Move move;
 
@@ -74,21 +80,20 @@ public class Game {
             }
         } while (move == null);
 
+        // Update Game state, player, and board based on user's move
         current_state = current_state.apply_move(move);
         current_player = current_state.get_current_player();
         board = current_state.get_board();
         System.out.println("Human Player moved: " + move);
     }
 
+    // Checks whether the given move is within Pawntastic rules
     private boolean is_valid_move(Move move) {
         List<Move> possible_moves = board.get_applicable_moves_for_player(current_player);
-
-        // for (Move moves : possible_moves){
-        //     System.out.println(moves);
-        // }
         return possible_moves.contains(move);
     }
 
+    // Computes the user's move
     private Move get_user_input_move() {
         
         System.out.print("Enter your move (Ex: a2-a3): ");
@@ -121,6 +126,7 @@ public class Game {
         }
     }
 
+    // Returns whether or not any side has no moves, or if one side has a pawn that has reached the opposite side
     private boolean is_game_over() {
 
         // Check if any player has no more legal moves left

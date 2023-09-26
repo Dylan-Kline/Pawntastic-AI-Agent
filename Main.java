@@ -1,7 +1,7 @@
 /**
      * Pawntastic Minimax Project
      * Author: Dylan Kline
-     * Date: 9/25/2023
+     * Date finished: 9/25/2023
 */
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +34,7 @@ public class Main {
             int opponent_type = Integer.parseInt(reader.readLine());
             System.out.print("\n");
 
+            // Ask user for depth limit
             int depth = 1;
             if (opponent_type == 2) {
                 System.out.println("Choose your difficulty level (1 - 10): ");
@@ -47,6 +48,7 @@ public class Main {
             char side_choice = Character.toLowerCase(reader.readLine().charAt(0));
             System.out.print("\n");
 
+            // Set player and agent sides
             Player player_type;
             Player agent_type;
             if (side_choice == 'b') {
@@ -58,6 +60,7 @@ public class Main {
                 agent_type = Player.BLACK;
             }
 
+            // Begin game
             Game game = new Game(board_size, player_type, agent_type, opponent_type, depth);
             game.play();
 

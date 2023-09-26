@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Board {
     
-    // Unicode values for pawn icons
+    // char values for pawn icons
     public static final char WHITE_PAWN = 'X';
     public static final char BLACK_PAWN = 'O';
 
@@ -41,6 +41,7 @@ public class Board {
         }
     }
 
+    // Returns a deep copy of this board
     public Board clone(){
 
         Board cloned_Board = new Board(this.size);
