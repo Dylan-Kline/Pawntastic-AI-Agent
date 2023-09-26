@@ -1,13 +1,14 @@
+/**
+     * Pawntastic Minimax Project
+     * Author: Dylan Kline
+     * Date: 9/25/2023
+*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    /**
-     * Pawntastic Minimax Project
-     * Author: Dylan Kline
-     * Date: 9/25/2023
-     */
+    
     public static void main(String[] args) {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -17,6 +18,10 @@ public class Main {
             System.out.println("Choose your game:");
             System.out.println("4. Tiny 4x4 Pawntastic");
             System.out.println("5. Very small 5x5 Pawntastic");
+            System.out.println("6. Small 6x6 Pawntastic");
+            System.out.println("8. Standard 8x8 Pawntastic");
+            System.out.println("10. Jumbo 10x10 Pawntastic");
+            System.out.println("Or enter any size >=4 to play that size game");
             System.out.print("Your choice? ");
             int board_size = Integer.parseInt(reader.readLine());
             System.out.print("\n");
@@ -24,9 +29,18 @@ public class Main {
             // Choose opponent type
             System.out.println("Choose your opponent:");
             System.out.println("1. An agent that uses MINIMAX");
+            System.out.println("2. An agent that uses H-MINIMAX with a fixed depth cutoff and alpha-beta pruning");
             System.out.print("Your choice? ");
             int opponent_type = Integer.parseInt(reader.readLine());
             System.out.print("\n");
+
+            int depth = 1;
+            if (opponent_type == 2) {
+                System.out.println("Choose your difficulty level (1 - 10): ");
+                System.out.print("Your choice? ");
+                depth = Integer.parseInt(reader.readLine());
+                System.out.print("\n");
+            }
 
             // Choose playing side
             System.out.print("Do you want to play for O's (B) or X's (W)? (X plays first) ");
@@ -44,8 +58,7 @@ public class Main {
                 agent_type = Player.BLACK;
             }
 
-
-            Game game = new Game(board_size, player_type, agent_type);
+            Game game = new Game(board_size, player_type, agent_type, opponent_type, depth);
             game.play();
 
         } catch (IOException e) {

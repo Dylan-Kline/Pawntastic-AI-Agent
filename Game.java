@@ -7,13 +7,17 @@ public class Game {
     private Player current_player;
     private Player human_player;
     private Agent agent;
+    private int agent_type;
+    private int depth;
 
-    public Game (int board_size, Player human_player_color, Player agent_color){
+    public Game (int board_size, Player human_player_color, Player agent_color, int agent_type, int depth){
         this.board = new Board (board_size);
         this.current_player = Player.WHITE;
         this.current_state = new State(board, current_player);
         this.human_player = human_player_color;
-        this.agent = new Agent(agent_color);
+        this.depth = depth;
+        this.agent = new Agent(agent_color, this.depth);
+        this.agent_type = agent_type;
     }
 
     public void play(){
@@ -49,7 +53,7 @@ public class Game {
     public void handle_agent_turn() {
 
         System.out.println("I'm thinking....");
-        Move best_move = agent.get_best_move(this.current_state);
+        Move best_move = agent.get_best_move(this.current_state, agent_type);
         current_state = current_state.apply_move(best_move);
         current_player = current_state.get_current_player();
         board = current_state.get_board();
