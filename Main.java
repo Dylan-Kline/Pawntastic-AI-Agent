@@ -1,7 +1,6 @@
 /**
-     * Pawntastic Minimax Project
+     * Pawntastic Minimax AI agent Project
      * Author: Dylan Kline
-     * Date finished: 9/25/2023
 */
 import java.io.BufferedReader;
 import java.io.IOException;
